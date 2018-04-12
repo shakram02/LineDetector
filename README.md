@@ -7,18 +7,17 @@ Detects lines of points in a given point cloud and groups them
 
 Add it in your root build.gradle at the end of repositories:
 
-```
+```groovy
 allprojects {
-		repositories {
-			...
-			maven { url 'https://jitpack.io' }
-		}
+	repositories {
+		maven { url 'https://jitpack.io' }
+	}
 }
 ```
 
 Add the dependency
 
-```
+```groovy
 dependencies {
      compile 'com.github.shakram02:LineDetector:v0.1'
 }
