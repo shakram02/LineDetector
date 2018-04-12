@@ -32,10 +32,8 @@ class LineFinder(private val points: List<Point>, private val thresholdDegrees: 
                 if (marked.contains(parent_point) || root_index == parent_index) continue
 
                 for ((child_index, child_point) in points.withIndex()) {
-
                     if (marked.contains(child_point)
-                            || parent_index == child_index
-                            || root_index == child_index) continue
+                            || parent_index == child_index || root_index == child_index) continue
 
 
                     // Angles could be close to 0 or close to 180
