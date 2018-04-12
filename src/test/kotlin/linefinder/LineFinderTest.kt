@@ -2,7 +2,6 @@ package linefinder
 
 import org.junit.Assert
 import org.junit.Test
-import java.util.*
 
 class LineFinderTest {
     @Test
@@ -42,38 +41,7 @@ class LineFinderTest {
     }
 
     @Test
-    fun twoLinesRealData() {
-        fun validateCluster(expected: HashSet<Point>, found: List<HashSet<Point>>): Boolean {
-            for (list in found) {
-                if (list.all { i -> expected.contains(i) }) {
-                    return true
-                }
-            }
-
-            return false
-        }
-        // Points that form 2 lines with equal number of characters in each line
-
-        val points = ArrayList<Point>()
-        // Cluster 1
-        points.add(Point(980.5, 596.0))
-        points.add(Point(726.5, 549.0))
-        points.add(Point(851.0, 572.5))
-        points.add(Point(593.5, 525.0))
-        // Cluster 2
-        points.add(Point(877.5, 299.0))
-        points.add(Point(754.5, 281.0))
-        points.add(Point(633.0, 261.5))
-        points.add(Point(1022.5, 318.5))
-        points.shuffle()
-
-        val finder = LineFinder(points)
-        val results = finder.clusterLines()
-
-        Assert.assertEquals(2, results.size)
-
-        val values = results.values.toList()
-
+    fun twoLinesBottomLeftTopRight() {
         val firstCluster = hashSetOf(
                 Point(980.5, 596.0), Point(726.5, 549.0),
                 Point(851.0, 572.5), Point(593.5, 525.0))
@@ -83,7 +51,56 @@ class LineFinderTest {
                 Point(633.0, 261.5), Point(1022.5, 318.5)
         )
 
-        Assert.assertTrue(validateCluster(firstCluster, values))
-        Assert.assertTrue(validateCluster(secondCluster, values))
+        runTest(listOf(firstCluster, secondCluster))
+    }
+
+    @Test
+    fun testTwoLinesTopLeftBottomRight() {
+        val firstCluster = hashSetOf(
+                Point(-318.0, 185.0),
+                Point(-172.0, 105.0),
+                Point(-36.0, 45.0),
+                Point(92.0, -15.0),
+                Point(210.0, -70.0))
+
+        // Cluster 2
+        val secondCluster = hashSetOf(
+                Point(-165.0, -8.0),
+                Point(-60.0, -73.0),
+                Point(100.0, -125.0),
+                Point(204.0, -180.0),
+                Point(-274.0, 59.0)
+        )
+
+        runTest(listOf(firstCluster, secondCluster))
+    }
+
+    private fun runTest(clusters: List<HashSet<Point>>) {
+        fun validateCluster(expected: HashSet<Point>, found: List<HashSet<Point>>): Boolean {
+            for (list in found) {
+                if (list.all { i -> expected.contains(i) }) {
+                    return true
+                }
+            }
+
+            return false
+        }
+
+        val points = mutableListOf<Point>()
+        for (cluster in clusters) {
+            points.addAll(cluster)
+        }
+        points.shuffle()
+
+        val finder = LineFinder(points)
+        val results = finder.clusterLines()
+
+        Assert.assertEquals(clusters.size, results.size)
+
+        val values = results.values.toList()
+
+        for (cluster in clusters) {
+            Assert.assertTrue(validateCluster(cluster.toHashSet(), values))
+        }
     }
 }
